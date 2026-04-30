@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Meal {
+  id               String      @id @default(cuid())
+  name             String
+  prepTime         String
+  category         String
+  cuisine          String
+  mainProtein      String
+  healthScore      Float
+  preferenceScore  Float
+  defaultPortions  Int         @default(2)
+  imageUrl         String?
+  ingredients      String
+  tags             String
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  mealSlots        MealSlot[]
+  mealHistory      MealHistory[]
+}
+
+model WeeklyPlan {
+  id            String      @id @default(cuid())
+  weekStartDate DateTime
+  status        String      @default("DRAFT")
+  createdAt     DateTime    @default(now())
+  acceptedAt    DateTime?
+
+  mealSlots     MealSlot[]
+  mealHistory   MealHistory[]
+}
+
+model MealSlot {
+  id           String     @id @default(cuid())
+  weeklyPlanId String
+  dayOfWeek    Int
+  slotType     String
+  mealId       String?
+  portions     Int        @default(2)
+  locked       Boolean    @default(false)
+  score        Float?
+  explanation  String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  weeklyPlan   WeeklyPlan @relation(fields: [weeklyPlanId], references: [id], onDelete: Cascade)
+  meal         Meal?      @relation(fields: [mealId], references: [id])
+}
+
+model MealHistory {
+  id           String     @id @default(cuid())
+  mealId       String
+  eatenDate    DateTime
+  slotType     String
+  weeklyPlanId String?
+  portions     Int        @default(2)
+  createdAt    DateTime   @default(now())
+
+  meal         Meal       @relation(fields: [mealId], references: [id])
+  weeklyPlan   WeeklyPlan? @relation(fields: [weeklyPlanId], references: [id])
+}
+
+model PlannerSettings {
+  id                        String   @id @default(cuid())
+  defaultSlotConfig         String
+  preferenceWeight          Float    @default(3)
+  healthWeight              Float    @default(2)
+  freshnessWeight           Float    @default(3)
+  varietyWeight             Float    @default(2)
+  prepSuitabilityWeight     Float    @default(2)
+  varietyStrictness         Float    @default(1)
+  freshnessPenaltyStrength  Float    @default(1)
+  maxLongPrepMealsPerWeek   Int      @default(2)
+  preferLongMealsOnWeekends Boolean  @default(true)
+  targetAverageHealthScore  Float    @default(7)
+}

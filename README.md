@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🥘 Munch Around
 
-## Getting Started
+A smart weekly meal planner built with Next.js 14, TypeScript, Tailwind CSS, and Prisma (SQLite).
 
-First, run the development server:
+## Features
+
+- **Weekly Planner** — auto-generate a 7-day meal plan scored by preference, health, freshness, variety, and prep-time suitability
+- **Meal Library** — browse, filter, add, edit, and delete meals with health/taste scores
+- **Shopping List** — aggregated ingredient list from the current plan, grouped by category, with checkboxes
+- **Meal History** — paginated log of all accepted meal plans
+- **Settings** — configure which slots (lunch/dinner) are enabled per day, and tune scoring weights
+
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Run database migration
+npx prisma migrate dev
+
+# Seed 35 starter meals + default settings
+npm run db:seed
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run db:seed` | Seed the database with starter meals |
+| `npm run db:migrate` | Run Prisma migrations |
+| `npm run db:reset` | Reset and re-migrate the database |
+| `npm run setup` | Migrate + seed in one step |
 
-## Learn More
+## Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: SQLite via Prisma v7 + `@prisma/adapter-better-sqlite3`
+- **ORM**: Prisma
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scoring Algorithm
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Each meal slot is scored using a weighted sum of:
+- **Preference score** — user-rated taste (0–10)
+- **Health score** — nutritional quality (0–10)
+- **Freshness** — penalty for meals eaten recently (within 14 days)
+- **Variety** — penalty for meals already in the current week's plan
+- **Prep suitability** — long-prep meals preferred on weekends
 
-## Deploy on Vercel
+All weights are configurable in the Settings page.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

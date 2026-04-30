@@ -16,17 +16,18 @@ A smart weekly meal planner built with Next.js 14, TypeScript, Tailwind CSS, and
 # Install dependencies
 npm install
 
-# Run database migration
+# Run database migration + generate client
 npx prisma migrate dev
+npx prisma generate
 
 # Seed 35 starter meals + default settings
 npm run db:seed
 
-# Start dev server
+# Start dev server (accessible on your local network)
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) locally, or `http://<your-ip>:3000` from another device on the same network.
 
 ## Scripts
 
